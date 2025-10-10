@@ -33,20 +33,20 @@ export default function Home() {
 
   return (
     <div>
-      <div className="flex h-screen">
+      <div className="flex h-[93vh] lg:h-screen">
         {/*======================
           2. Sidebar Component
         =========================*/}
         <Sidebar expand={expand} setExpand={setExpand} />
 
-        <div className="flex-1 flex flex-col items-center justify-center px-4 pb-8 bg-slate-300 text-primary relative">
+        <div className="flex-1 flex flex-col items-center justify-center px-4 pb-8 bg-slate-300 dark:bg-darkSecondary text-primary dark:text-secondary relative">
           <div className="md:hidden absolute top-6 px-4 flex items-center justify-between w-full">
             {/*========================
               3. Menu icon for mobile
             ===========================*/}
             <CgMenuLeftAlt
               onClick={() => (expand ? setExpand(false) : setExpand(true))}
-              className="text-primary cursor-pointer text-4xl"
+              className="text-primary dark:text-secondary cursor-pointer text-4xl"
               alt="menu_icon"
             />
 
@@ -54,7 +54,7 @@ export default function Home() {
               4. Chat icon for mobile
             ===========================*/}
             <TbMessageCirclePlus
-              className="text-primary text-3xl cursor-pointer"
+              className="text-primary dark:text-secondary text-3xl cursor-pointer"
               alt="chat_icon"
             />
           </div>
@@ -70,11 +70,11 @@ export default function Home() {
                   alt="logo_icon"
                   className="w-20"
                 />
-                <p className="text-2xl font-medium text-primary">
+                <p className="text-2xl font-medium text-primary dark:text-secondary">
                   Hi, I'm iLaw.
                 </p>
               </div>
-              <p className="text-sm mt-2 text-primary">
+              <p className="text-sm mt-2 text-primary dark:text-secondary">
                 How can I help you today?
               </p>
             </>
@@ -105,9 +105,9 @@ export default function Home() {
                     className="h-9 w-9 p-1 border border-white/15 rounded-full"
                   />
                   <div className="loader flex justify-center items-center gap-1">
-                    <div className="w-1 h-1 rounded-full bg-primary animate-bounce"></div>
-                    <div className="w-1 h-1 rounded-full bg-primary animate-bounce"></div>
-                    <div className="w-1 h-1 rounded-full bg-primary animate-bounce"></div>
+                    <div className="w-1 h-1 rounded-full bg-primary dark:text-secondary animate-bounce"></div>
+                    <div className="w-1 h-1 rounded-full bg-primary dark:text-secondary animate-bounce"></div>
+                    <div className="w-1 h-1 rounded-full bg-primary dark:text-secondary animate-bounce"></div>
                   </div>
                 </div>
               )}
@@ -116,7 +116,7 @@ export default function Home() {
 
           <PromptBox isLoading={isLoading} setIsLoading={setIsLoading} />
 
-          <p className="text-xs absolute bottom-1 text-primary">
+          <p className="text-xs mb-2 lg:mb-0 absolute bottom-1 text-primary dark:text-secondary">
             AI-generated, for reference only. made by David Raoof
           </p>
         </div>

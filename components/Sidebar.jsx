@@ -27,6 +27,8 @@ import Image from "next/image";
 import { CgMenuLeftAlt } from "react-icons/cg";
 import { TbMessageCirclePlus } from "react-icons/tb";
 import toast from "react-hot-toast";
+import DarkMode from "./DarkMode";
+import ToggleTheme from "./ToggleTheme";
 
 const Sidebar = ({ expand, setExpand }) => {
   const { openSignIn } = useClerk();
@@ -54,7 +56,7 @@ const Sidebar = ({ expand, setExpand }) => {
 
   return (
     <div
-      className={`flex flex-col justify-between bg-primary pt-7 transition-all z-50 max-md:absolute max-md:h-screen ${
+      className={`flex flex-col justify-between bg-primary dark:bg-darkPrimary pt-7 transition-all z-50 max-md:absolute max-md:h-[93vh] ${
         expand ? "p-4 w-64" : "md:w-20 w-0 max-md:overflow-hidden"
       }`}
     >
@@ -104,7 +106,7 @@ const Sidebar = ({ expand, setExpand }) => {
             {/*===========
               6. Tooltip
             ==============*/}
-            <span className="absolute left-12 whitespace-nowrap bg-secondary text-primary text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">
+            <span className="absolute left-12 whitespace-nowrap bg-secondary text-primary dark:text-darkPrimary text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">
               {expand ? "Close Sidebar" : "Open Sidebar"}
             </span>
           </div>
@@ -133,9 +135,9 @@ const Sidebar = ({ expand, setExpand }) => {
           pointer-events-none"
           >
             Internships
-            <div className="w-3 h-3 absolute bg-secondary rotate-45 left-4 -bottom-1.5"></div>
+
           </div>
-          {expand && <p className="text-primary font-medium">Internships</p>}
+          {expand && <p className="text-primary dark:text-darkPrimary font-medium">Internships</p>}
         </button>
 
         {/*===================
@@ -162,7 +164,7 @@ const Sidebar = ({ expand, setExpand }) => {
             New Chat
             <div className="w-3 h-3 absolute bg-secondary rotate-45 left-4 -bottom-1.5"></div>
           </div>
-          {expand && <p className="text-primary font-medium">New Chat</p>}
+          {expand && <p className="text-primary dark:text-darkPrimary font-medium">New Chat</p>}
         </button>
 
         {/*===============
@@ -186,22 +188,32 @@ const Sidebar = ({ expand, setExpand }) => {
         </div>
       </div>
 
-      {/*=================
-        10. Profile icon
-      ====================*/}
-      <div
-        onClick={user ? null : openSignIn}
-        className={`flex items-center ${
-          expand ? "rounded-lg" : "justify-center w-full"
-        } gap-3 text-secondary text-sm p-2 mt-2 cursor-pointer`}
-      >
-        {user ? (
-          <UserButton />
-        ) : (
-          <Image src={assets.profile_icon} alt="profile_icon" className="w-7" />
-        )}
+      {/*===================
+        10. Bottom Section
+      ======================*/}
+      <div className="flex flex-col gap-4 sm:gap-8 mb-2 lg:mb-0">
+        {/* Theme Toggle فوق البروفايل */}
+        {expand ? <ToggleTheme /> : <DarkMode />}
 
-        {expand && <span className="text-secondary">My Profile</span>}
+        {/* Profile Icon تحتها مباشرة */}
+        <div
+          onClick={user ? null : openSignIn}
+          className={`flex items-center ${
+            expand ? "rounded-lg dark:bg-darkSecondary dark:hover:bg-secondary/10" : "justify-center w-full"
+          } gap-3 text-sm p-2 cursor-pointer hover:bg-secondary/10 transition-colors duration-200`}
+        >
+          {user ? (
+            <UserButton />
+          ) : (
+            <Image
+              src={assets.profile_icon}
+              alt="profile_icon"
+              className="w-7"
+            />
+          )}
+
+          {expand && <span className="text-secondary">My Profile</span>}
+        </div>
       </div>
     </div>
   );

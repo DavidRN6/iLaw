@@ -114,7 +114,7 @@ const PromptBox = ({ isLoading, setIsLoading }) => {
       onSubmit={sendPrompt}
       className={`w-full ${
         selectedChat?.messages.length > 0 ? "max-w-3xl" : "max-w-2xl"
-      } bg-primary p-4 text-secondary
+      } bg-primary dark:bg-darkThird p-4 text-secondary
     rounded-3xl mt-4 transition-all`}
     >
       <textarea
@@ -145,7 +145,7 @@ const PromptBox = ({ isLoading, setIsLoading }) => {
             } rounded-full p-2 cursor-pointer`}
           >
             <FaArrowUp
-              className="aspect-square text-primary text-base"
+              className="aspect-square text-primary dark:text-darkThird text-base"
               alt="arrow_icon"
             />
           </button>

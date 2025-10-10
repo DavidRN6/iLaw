@@ -59,7 +59,7 @@ const ChatLabel = ({ openMenu, setOpenMenu, id, name }) => {
     <div
       onClick={selectChat}
       className="flex items-center text-third justify-between p-2
-    rounded-lg text-sm group cursor-pointer"
+    rounded-lg text-sm group cursor-pointer hover:bg-secondary/10"
     >
       <p className="group-hover:max-w-5/6 truncate">{name}</p>
       <div
@@ -79,18 +79,18 @@ const ChatLabel = ({ openMenu, setOpenMenu, id, name }) => {
         <div
           className={`absolute ${
             openMenu.id === id && openMenu.open ? "block" : "hidden"
-          } -right-36 top-6 bg-primary rounded-xl w-max p-2`}
+          } -right-36 top-6 bg-primary dark:bg-darkPrimary rounded-xl w-max p-2`}
         >
           <div
             onClick={renameHandler}
-            className="flex items-center gap-3 px-3 py-2 rounded-lg"
+            className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-secondary/10"
           >
             <Image src={assets.pencil_icon} alt="pencil_icon" className="w-4" />
             <p className="text-secondary">Rename</p>
           </div>
           <div
             onClick={deleteHandler}
-            className="flex items-center gap-3 px-3 py-2 rounded-lg"
+            className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-secondary/10"
           >
             <Image src={assets.delete_icon} alt="delete_icon" className="w-4" />
             <p className="text-secondary">Delete</p>
