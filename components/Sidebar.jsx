@@ -56,7 +56,7 @@ const Sidebar = ({ expand, setExpand }) => {
 
   return (
     <div
-      className={`flex flex-col justify-between bg-primary dark:bg-darkPrimary pt-7 transition-all z-50 max-md:absolute max-md:h-[93vh] ${
+      className={`flex flex-col justify-between bg-primary dark:bg-darkPrimary pt-7 transition-all z-50 max-md:absolute max-md:h-screen ${
         expand ? "p-4 w-64" : "md:w-20 w-0 max-md:overflow-hidden"
       }`}
     >
@@ -191,7 +191,7 @@ const Sidebar = ({ expand, setExpand }) => {
       {/*===================
         10. Bottom Section
       ======================*/}
-      <div className="flex flex-col gap-4 sm:gap-8 mb-2 lg:mb-0">
+      <div className="flex flex-col gap-4 sm:gap-8">
         {/* Theme Toggle فوق البروفايل */}
         {expand ? <ToggleTheme /> : <DarkMode />}
 

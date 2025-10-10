@@ -33,7 +33,7 @@ export default function Home() {
 
   return (
     <div>
-      <div className="flex h-[93vh] lg:h-screen">
+      <div className="flex h-screen">
         {/*======================
           2. Sidebar Component
         =========================*/}
@@ -116,7 +116,7 @@ export default function Home() {
 
           <PromptBox isLoading={isLoading} setIsLoading={setIsLoading} />
 
-          <p className="text-xs mb-2 lg:mb-0 absolute bottom-1 text-primary dark:text-secondary">
+          <p className="text-xs absolute bottom-1 text-primary dark:text-secondary">
             AI-generated, for reference only. made by David Raoof
           </p>
         </div>
