@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import { MdOutlineLightMode } from "react-icons/md";
 import { IoMoon } from "react-icons/io5";
