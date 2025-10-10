@@ -4,13 +4,23 @@ import { MdOutlineLightMode } from "react-icons/md";
 import { IoMoon } from "react-icons/io5";
 
 const ToggleTheme = () => {
-  const [theme, setTheme] = useState(
-    localStorage.getItem("theme") ? localStorage.getItem("theme") : "light"
-  );
-
-  const element = document.documentElement;
+  const [theme, setTheme] = useState(null); // null بدل light كبداية مؤقتة
 
   useEffect(() => {
+    // نقرأ الثيم المحفوظ أول ما الصفحة تفتح
+    const savedTheme =
+      typeof window !== "undefined"
+        ? localStorage.getItem("theme") || "light"
+        : "light";
+
+    setTheme(savedTheme);
+  }, []);
+
+  useEffect(() => {
+    if (!theme) return; // ما نعملش حاجة لو الثيم لسه null
+
+    const element = document.documentElement;
+
     if (theme === "dark") {
       element.classList.add("dark");
       localStorage.setItem("theme", "dark");
@@ -20,8 +30,11 @@ const ToggleTheme = () => {
     }
   }, [theme]);
 
+  // لو الثيم لسه null، ما نرندرش الكومبوننت لحد ما نعرفه
+  if (!theme) return null;
+
   return (
-    <div className="w-full bg-primary dark:bg-darkSecondary border border-secondary/20 rounded-lg p-3 text-secondary">
+    <div className="w-full bg-primary dark:bg-darkSecondary border border-secondary/20 rounded-lg p-3 text-secondary transition-colors duration-200">
       <p className="text-sm font-semibold mb-3 text-secondary/70">Theme</p>
 
       <div className="flex flex-col gap-2">

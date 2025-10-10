@@ -4,13 +4,23 @@ import { MdOutlineLightMode } from "react-icons/md";
 import { IoMoon } from "react-icons/io5";
 
 const DarkMode = () => {
-  const [theme, setTheme] = useState(
-    localStorage.getItem("theme") ? localStorage.getItem("theme") : "light"
-  );
+  // نبدأ بـ null علشان نمنع الريندر قبل معرفة الثيم الحقيقي
+  const [theme, setTheme] = useState(null);
 
-  const element = document.documentElement; // html element
-
+  // أول useEffect: قراءة الثيم من localStorage بعد تحميل الصفحة
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedTheme = localStorage.getItem("theme") || "light";
+      setTheme(savedTheme);
+    }
+  }, []);
+
+  // ثاني useEffect: تطبيق الثيم على <html>
+  useEffect(() => {
+    if (!theme) return; // ما تعملش حاجة لحد ما نعرف الثيم فعلاً
+
+    const element = document.documentElement;
+
     if (theme === "dark") {
       element.classList.add("dark");
       localStorage.setItem("theme", "dark");
@@ -19,6 +29,9 @@ const DarkMode = () => {
       localStorage.setItem("theme", "light");
     }
   }, [theme]);
+
+  // أثناء التحميل الأول (قبل ما نعرف الثيم) منرجعش أي عنصر
+  if (!theme) return null;
 
   return (
     <div className="relative text-secondary/70 text-2xl flex items-center justify-center">
