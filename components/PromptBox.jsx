@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { assets } from "../assets/assets";
-import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -50,14 +48,14 @@ const PromptBox = ({ isLoading, setIsLoading }) => {
       );
 
       // saving user prompt in selected chat
-
       setSelectedChat((prev) => ({
         ...prev,
         messages: [...prev.messages, userPrompt],
       }));
 
       const { data } = await axios.post("/api/chat/ai", {
-        messages: [...selectedChat.messages, userPrompt],
+        chatId: selectedChat._id,
+        prompt
       });
 
       if (data.success) {

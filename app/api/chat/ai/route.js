@@ -1,50 +1,57 @@
+export const maxDuration = 60;
+import connectDB from "@/config/db";
+import Chat from "@/models/Chat";
+import { getAuth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import axios from "axios";
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  baseURL: "https://api.deepseek.com",
+  apiKey: process.env.DEEPSEEK_API_KEY,
+});
 
 export async function POST(req) {
   try {
-    const body = await req.json();
-    const { messages } = body;
+    const { userId } = getAuth(req);
 
-    if (!messages || !Array.isArray(messages)) {
-      return NextResponse.json({ error: "Invalid messages" }, { status: 400 });
+    // Extract chatId and prompt from the request body
+    const { chatId, prompt } = await req.json();
+
+    if (!userId) {
+      return NextResponse.json({
+        success: false,
+        message: "User not authenticated",
+      });
     }
 
-    const response = await axios.post(
-      "https://openrouter.ai/api/v1/chat/completions",
-      {
-        model: "mistralai/mistral-7b-instruct:free", // تقدر تغيّر الموديل هنا
-        messages: [
-          {
-            role: "system",
-            content: "أنت مساعد قانوني ذكي تساعد المستخدم في الأمور القانونية.",
-          },
-          ...messages,
-        ],
-        temperature: 0.7,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json",
-          "HTTP-Referer": "https://i-law-ai-chat.vercel.app",
-        },
-      }
-    );
+    // Find the chat document in the database based on userId and chatId
+    await connectDB();
+    const data = await Chat.findOne({ userId, _id: chatId });
 
-    const aiMessage = response.data.choices[0].message;
+    // Create a user message object
+    const userPrompt = {
+      role: "user",
+      content: prompt,
+      timeStamp: Date.now(),
+    };
 
-    return NextResponse.json({
-      message: {
-        role: aiMessage.role || "assistant",
-        content: aiMessage.content,
-      },
+    data.messages.push(userPrompt); // Add user message to chat history
+
+    // Call the DeepSeek API to get a chat completion
+    const completion = await openai.chat.completions.create({
+      messages: [{ role: "user", content: prompt }],
+      model: "deepseek-chat",
+      store: true,
     });
-  } catch (err) {
-    console.error("OpenRouter API Error:", err.response?.data || err.message);
-    return NextResponse.json(
-      { error: "حدث خطأ أثناء الاتصال بـ OpenRouter" },
-      { status: 500 }
-    );
+
+    const message = completion.choices[0].message;
+    message.timeStamp = Date.now();
+    data.messages.push(message); // Add AI response to chat history
+
+    data.save(); // Save the updated chat document
+
+    return NextResponse.json({ success: true, data: message });
+  } catch (error) {
+    return NextResponse.json({ success: false, error: error.message });
   }
 }

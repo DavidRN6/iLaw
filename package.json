@@ -10,9 +10,13 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.33.3",
+    "@google/genai": "^1.23.0",
+    "@tanstack/react-query": "^5.90.2",
+    "@tanstack/react-query-devtools": "^5.90.2",
     "axios": "^1.12.2",
     "mongoose": "^8.19.1",
     "next": "15.5.4",
+    "openai": "^6.3.0",
     "prismjs": "^1.30.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",

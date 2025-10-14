@@ -29,30 +29,12 @@ import { TbMessageCirclePlus } from "react-icons/tb";
 import toast from "react-hot-toast";
 import DarkMode from "./DarkMode";
 import ToggleTheme from "./ToggleTheme";
+import ClientProfileButton from "./ClientProfileButton";
 
 const Sidebar = ({ expand, setExpand }) => {
   const { openSignIn } = useClerk();
   const { user, chats, createNewChat } = useAppContext();
   const [openMenu, setOpenMenu] = useState({ id: 0, open: false });
-  const [isClient, setIsClient] = useState(false);
-
-  // // نتأكد إن الكود يشتغل بعد تحميل الكلاينت فقط
-  // useEffect(() => {
-  //   setIsClient(true);
-  // }, []);
-
-  // // أول Render هيكون مطابق للـ SSR
-  // if (!isClient) {
-  //   return (
-  //     <div className="sm:flex items-center justify-center hidden h-screen bg-primary">
-  //       <Image
-  //         src={assets.logo_icon}
-  //         alt="loading"
-  //         className="w-12 animate-pulse"
-  //       />
-  //     </div>
-  //   );
-  // }
 
   return (
     <div
@@ -135,9 +117,12 @@ const Sidebar = ({ expand, setExpand }) => {
           pointer-events-none"
           >
             Internships
-
           </div>
-          {expand && <p className="text-primary dark:text-darkPrimary font-medium">Internships</p>}
+          {expand && (
+            <p className="text-primary dark:text-darkPrimary font-medium">
+              Internships
+            </p>
+          )}
         </button>
 
         {/*===================
@@ -164,7 +149,11 @@ const Sidebar = ({ expand, setExpand }) => {
             New Chat
             <div className="w-3 h-3 absolute bg-secondary rotate-45 left-4 -bottom-1.5"></div>
           </div>
-          {expand && <p className="text-primary dark:text-darkPrimary font-medium">New Chat</p>}
+          {expand && (
+            <p className="text-primary dark:text-darkPrimary font-medium">
+              New Chat
+            </p>
+          )}
         </button>
 
         {/*===============
@@ -191,27 +180,20 @@ const Sidebar = ({ expand, setExpand }) => {
       {/*===================
         10. Bottom Section
       ======================*/}
-      <div className="flex flex-col gap-4 sm:gap-8">
-        {/* Theme Toggle فوق البروفايل */}
+      <div className="flex flex-col gap-4 sm:gap-6">
+        {/* Theme Toggle */}
         {expand ? <ToggleTheme /> : <DarkMode />}
 
-        {/* Profile Icon تحتها مباشرة */}
+        {/* Profile Icon */}
         <div
           onClick={user ? null : openSignIn}
           className={`flex items-center ${
-            expand ? "rounded-lg dark:bg-darkSecondary dark:hover:bg-secondary/10" : "justify-center w-full"
-          } gap-3 text-sm p-2 cursor-pointer hover:bg-secondary/10 transition-colors duration-200`}
+            expand
+              ? "rounded-lg dark:bg-darkSecondary dark:hover:bg-secondary/10"
+              : "justify-center w-full"
+          } gap-3 text-sm p-2 cursor-pointer transition-colors duration-200`}
         >
-          {user ? (
-            <UserButton />
-          ) : (
-            <Image
-              src={assets.profile_icon}
-              alt="profile_icon"
-              className="w-7"
-            />
-          )}
-
+          <ClientProfileButton user={user} openSignIn={openSignIn} />
           {expand && <span className="text-secondary">My Profile</span>}
         </div>
       </div>
