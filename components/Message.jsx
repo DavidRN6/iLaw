@@ -26,23 +26,21 @@ const Message = ({ role, content }) => {
       >
         <div
           className={`group relative flex max-w-2xl py-3 rounded-xl
-            ${role === "user" ? "bg-secondary dark:bg-darkThird px-5" : "gap-3"}`}
+            ${
+              role === "user" ? "bg-secondary dark:bg-darkThird px-5" : "gap-3"
+            }`}
         >
           <div
             className={`opacity-0 group-hover:opacity-100 absolute ${
               role === "user" ? "-left-16 top-2.5" : "left-9 -bottom-6"
             } transition-all`}
           >
-            <div className="flex items-center gap-2 opacity-70">
+            <div className="flex items-center opacity-70">
               {role === "user" ? (
                 <>
                   <LuCopy
                     onClick={copyMessage}
                     alt="copy_icon"
-                    className="text-xl text-primary dark:text-secondary cursor-pointer"
-                  />
-                  <LuPenLine
-                    alt="pencil_icon"
                     className="text-xl text-primary dark:text-secondary cursor-pointer"
                   />
                 </>
@@ -53,17 +51,15 @@ const Message = ({ role, content }) => {
                     alt="copy_icon"
                     className="text-xl text-primary dark:text-secondary cursor-pointer"
                   />
-                  <TbReload
-                    alt="regenerate_icon"
-                    className="text-xl text-primary dark:text-secondary cursor-pointer"
-                  />
                 </>
               )}
             </div>
           </div>
 
           {role === "user" ? (
-            <span className="text-primary dark:text-secondary">{content}</span>
+            <span className="text-primary dark:text-secondary text-base">
+              {content}
+            </span>
           ) : (
             <>
               <Image
@@ -71,7 +67,7 @@ const Message = ({ role, content }) => {
                 alt="logo_icon"
                 className="h-9 w-9 p-1 border border-white/15 rounded-full"
               />
-              <div className="space-y-4 w-full overflow-scroll text-primary dark:text-secondary">
+              <div className="space-y-4 w-full overflow-scroll text-primary dark:text-secondary text-base">
                 <Markdown>{content}</Markdown>
               </div>
             </>

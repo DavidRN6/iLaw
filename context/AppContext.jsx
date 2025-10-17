@@ -51,7 +51,6 @@ export const AppContextProvider = ({ children }) => {
         }
       );
       if (data.success) {
-        console.log(data.data);
         setChats(data.data);
 
         // if the user has no chat, create one
@@ -66,7 +65,6 @@ export const AppContextProvider = ({ children }) => {
 
           // set recently updated chat as selected chat
           setSelectedChat(data.data[0]);
-          console.log(data.data[0]);
         }
       } else {
         toast.error(data.message);

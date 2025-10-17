@@ -1,57 +1,51 @@
-export const maxDuration = 60;
-import connectDB from "@/config/db";
-import Chat from "@/models/Chat";
-import { getAuth } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
-import OpenAI from "openai";
+// src/app/api/chat/ai/route.js
 
-const openai = new OpenAI({
-  baseURL: "https://api.deepseek.com",
-  apiKey: process.env.DEEPSEEK_API_KEY,
-});
+import { GoogleGenAI } from '@google/genai';
+import { NextResponse } from 'next/server'; // لاستخدام الردود في App Router
 
-export async function POST(req) {
+// تأكد من أن متغير البيئة GEMINI_API_KEY مضبوط في ملف .env
+// المكتبة تتعرف عليه تلقائياً
+const ai = new GoogleGenAI({});
+const MODEL_NAME = "gemini-2.5-flash"; // نموذج سريع
+
+// ===============================================
+// دالة POST - لاستقبال البيانات من PromptBox.jsx
+// ===============================================
+export async function POST(request) {
   try {
-    const { userId } = getAuth(req);
+    // 1. قراءة البيانات المرسلة من الواجهة الأمامية (promptBox.jsx)
+    const { chatId, prompt } = await request.json(); 
 
-    // Extract chatId and prompt from the request body
-    const { chatId, prompt } = await req.json();
-
-    if (!userId) {
-      return NextResponse.json({
-        success: false,
-        message: "User not authenticated",
-      });
+    if (!prompt) {
+      return NextResponse.json({ success: false, message: 'Prompt is required' }, { status: 400 });
     }
 
-    // Find the chat document in the database based on userId and chatId
-    await connectDB();
-    const data = await Chat.findOne({ userId, _id: chatId });
-
-    // Create a user message object
-    const userPrompt = {
-      role: "user",
-      content: prompt,
-      timeStamp: Date.now(),
+    // 2. الاتصال بنموذج Gemini
+    // **ملاحظة: هذا مثال لإرسال سؤال واحد. لإضافة سجل المحادثة، يجب جلب الرسائل السابقة.**
+    const response = await ai.models.generateContent({
+      model: MODEL_NAME,
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+    });
+    
+    // 3. تجهيز الرد
+    const assistantResponse = {
+      role: "assistant",
+      content: response.text, // النص الذي تم إنشاؤه بواسطة Gemini
+      timestamp: Date.now(),
     };
 
-    data.messages.push(userPrompt); // Add user message to chat history
+    // 4. إرسال الرد بنجاح (JSON)
+    return NextResponse.json({ 
+      success: true, 
+      data: assistantResponse 
+    }, { status: 200 });
 
-    // Call the DeepSeek API to get a chat completion
-    const completion = await openai.chat.completions.create({
-      messages: [{ role: "user", content: prompt }],
-      model: "deepseek-chat",
-      store: true,
-    });
-
-    const message = completion.choices[0].message;
-    message.timeStamp = Date.now();
-    data.messages.push(message); // Add AI response to chat history
-
-    data.save(); // Save the updated chat document
-
-    return NextResponse.json({ success: true, data: message });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message });
+    console.error('Gemini API Error:', error);
+    // إرجاع رسالة خطأ
+    return NextResponse.json({ 
+      success: false, 
+      message: 'Failed to communicate with the AI model. Check your API Key and server logs.' 
+    }, { status: 500 });
   }
 }
