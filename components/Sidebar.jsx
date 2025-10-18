@@ -22,7 +22,7 @@ import { assets } from "../assets/assets";
 import { useClerk, UserButton } from "@clerk/clerk-react";
 import { useAppContext } from "../context/AppContext";
 import ChatLabel from "./ChatLabel";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { CgMenuLeftAlt } from "react-icons/cg";
 import { TbMessageCirclePlus } from "react-icons/tb";
@@ -30,11 +30,18 @@ import toast from "react-hot-toast";
 import DarkMode from "./DarkMode";
 import ToggleTheme from "./ToggleTheme";
 import ClientProfileButton from "./ClientProfileButton";
+import { LuGraduationCap } from "react-icons/lu";
+import ExamPopup from "./ExamPopup";
 
 const Sidebar = ({ expand, setExpand }) => {
   const { openSignIn } = useClerk();
   const { user, chats, createNewChat } = useAppContext();
   const [openMenu, setOpenMenu] = useState({ id: 0, open: false });
+
+  //=================================
+  //  2. New States For Exams Popup
+  //=================================
+  const [showPopup, setShowPopup] = useState(false);
 
   return (
     <div
@@ -126,11 +133,42 @@ const Sidebar = ({ expand, setExpand }) => {
         </button>
 
         {/*===================
-          8. New Chat Button
+          8. Exams Button
+        ======================*/}
+        <button
+          onClick={() => setShowPopup(true)}
+          className={`mt-4 flex items-center justify-center cursor-pointer
+        ${
+          expand
+            ? "bg-secondary hover:opacity-90 rounded-2xl gap-2 p-2.5 w-max"
+            : "group relative h-9 w-9 mx-auto  rounded-lg"
+        }`}
+        >
+          <LuGraduationCap
+            className={expand ? "text-xl" : "text-2xl text-white/60"}
+            alt="chat_icon"
+          />
+          <div
+            className="absolute w-max -top-12 -right-12 opacity-0 group-hover:opacity-100
+          transition bg-secondary text-sm px-3 py-2 rounded-lg shadow-lg
+          pointer-events-none"
+          >
+            Exams
+            <div className="w-3 h-3 absolute bg-secondary rotate-45 left-4 -bottom-1.5"></div>
+          </div>
+          {expand && (
+            <p className="text-primary dark:text-darkPrimary font-medium">
+              Exams
+            </p>
+          )}
+        </button>
+
+        {/*===================
+          9. New Chat Button
         ======================*/}
         <button
           onClick={createNewChat}
-          className={`mt-8 flex items-center justify-center cursor-pointer
+          className={`mt-4 flex items-center justify-center cursor-pointer
         ${
           expand
             ? "bg-secondary hover:opacity-90 rounded-2xl gap-2 p-2.5 w-max"
@@ -197,6 +235,11 @@ const Sidebar = ({ expand, setExpand }) => {
           {expand && <span className="text-secondary">My Profile</span>}
         </div>
       </div>
+
+      {/*=================
+        11. Exam Popup
+      ===================*/}
+      <ExamPopup showPopup={showPopup} setShowPopup={setShowPopup} />
     </div>
   );
 };
